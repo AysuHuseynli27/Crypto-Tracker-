@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crypto Tracker</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; background: #0f172a; color: #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #334155; }
+    .up { color: #22c55e; } .down { color: #ef4444; }
+  </style>
+</head>
+<body>
+  <h1>Crypto Tracker</h1>
+  <table>
+    <thead><tr><th>Asset</th><th>Price</th><th>24h</th><th>Status</th></tr></thead>
+    <tbody id="rows"><tr><td colspan="4">Yüklənir...</td></tr></tbody>
+  </table>
+  <script>
+    async function load() {
+      const res = await fetch("/api/prices");
+      const data = await res.json();
+      if (data.error) return;
+      document.getElementById("rows").innerHTML = data.map(c => {
+        const ch = c["Change_24h_%"];
+        return `<tr>
+          <td>${c.Asset} (${c.Ticker.toUpperCase()})</td>
+          <td>$${c.Price_USD}</td>
+          <td class="${ch >= 0 ? "up" : "down"}">${ch.toFixed(2)}%</td>
+          <td>${c.Status}</td>
+        </tr>`;
+      }).join("");
+    }
+    load();
+    setInterval(load, 60000);
+  </script>
+</body>
+</html>
