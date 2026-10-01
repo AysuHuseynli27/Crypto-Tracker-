@@ -1,29 +1,45 @@
-# Real-Time Global Crypto ETL Pipeline
+# Crypto Tracker
 
-A professional Data Engineering project designed to extract, transform, and load live cryptocurrency market data into a local SQLite database using Python.
+A small crypto price tracker built with Python. It pulls live market data from the CoinGecko API, stores it in SQLite, and shows it on a simple web page.
 
-## Project Overview
-This ETL (Extract, Transform, Load) pipeline tracks top cryptocurrencies in real-time. It provides a live dashboard directly in the terminal and archives historical market data for future analysis.
+## What it does
 
-## Live Output Preview
-When running, the system generates the following real-time report:
+- Fetches prices for Bitcoin, Ethereum, BNB, XRP, Solana and Cardano
+- Cleans the data with pandas
+- Marks each coin as BULLISH or BEARISH based on its 24h change
+- Saves every update to a local SQLite database (`crypto_vault.db`)
+- Shows everything in a table that refreshes every 60 seconds
 
-| Asset    | Price_USD | Change_24h_% | Status   |
-|----------|-----------|--------------|----------|
-| Bitcoin  | 68601.00  | -1.77        | BEARISH  |
-| Ethereum | 2096.36   | -2.21        | BEARISH  |
-| BNB      | 604.97    | -0.25        | BEARISH  |
-| XRP      | 1.31      | -2.34        | BEARISH  |
-| Solana   | 80.73     | -1.16        | BEARISH  |
-| Cardano  | 0.24      | -2.98        | BEARISH  |
+## Stack
 
-## Key Features
-- **Automated Extraction:** Fetches live market data via the CoinGecko API.
-- **Data Transformation:** Cleans and formats raw JSON data using Pandas.
-- **Persistent Storage:** Logs all processed data into a local SQLite database (`crypto_vault.db`).
-- **Live Terminal Dashboard:** Displays a clean market table that refreshes every 60 seconds.
+- **Backend:** Python, Flask, pandas, requests, SQLite
+- **Frontend:** HTML, CSS, JavaScript
+- **Data source:** CoinGecko API
 
-## Tech Stack
-- **Language:** Python 3
-- **Libraries:** Pandas, Requests, SQLite3
-- **Environment:** Developed on mobile via GitHub Codespaces
+## Project structure
+
+```
+app.py              Flask server and /api/prices endpoint
+cryptotracker.py    Data pipeline (fetch, process, save)
+templates/
+  index.html        Frontend page
+```
+
+## Run it
+
+```bash
+pip install flask pandas requests
+python app.py
+```
+
+Then open `http://localhost:5000`.
+
+To run only the terminal version of the pipeline:
+
+```bash
+python cryptotracker.py
+```
+
+## Note
+
+CoinGecko's free API has rate limits, so the page refreshes once per minute.
